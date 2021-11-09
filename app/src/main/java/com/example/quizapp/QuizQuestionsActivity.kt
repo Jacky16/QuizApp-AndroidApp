@@ -34,6 +34,14 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
+
+        initVariables()
+
+        mQuestionsList = Constants.getQuestions()
+        setQuestion()
+    }
+
+    private fun initVariables() {
         mUserName = intent.getStringExtra(Constants.USER_NAME)
         progressbar = findViewById(R.id.progressBar)
         tvProgressbar = findViewById(R.id.tv_progressBar)
@@ -53,9 +61,6 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionThree?.setOnClickListener(this)
         tvOptionFour?.setOnClickListener(this)
         btnSubmit?.setOnClickListener(this)
-
-        mQuestionsList = Constants.getQuestions()
-        setQuestion()
     }
 
     private fun setQuestion() {
@@ -147,49 +152,51 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
             R.id.btn_submit -> {
-                if (mSelectedOptionPosition == 0) {
-                    mCurrentPosition++
+                onSubmit()
+            }
+        }
+    }
 
-                    when {
-                        mCurrentPosition <= mQuestionsList!!.size -> {
-                            setQuestion()
-                        }
-                        else -> {
-                            val intent = Intent(this,ResultActivity::class.java)
-                            intent.putExtra(Constants.USER_NAME,mUserName)
-                            intent.putExtra(Constants.CORRECT_ANSWER,mCorrectAnswers.toString())
-                            intent.putExtra(Constants.TOTAL_QUESTIONS,mQuestionsList?.size.toString())
+    private fun onSubmit() {
+        if (mSelectedOptionPosition == 0) {
+            mCurrentPosition++
 
-                            startActivity(intent)
-                            finish()
-                        }
-                    }
-                } else {
+            when {
+                mCurrentPosition <= mQuestionsList!!.size -> {
+                    setQuestion()
+                }
+                else -> {
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra(Constants.USER_NAME, mUserName)
+                    intent.putExtra(Constants.CORRECT_ANSWER, mCorrectAnswers.toString())
+                    intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionsList?.size.toString())
 
-                    val question = mQuestionsList?.get(mCurrentPosition - 1)
-
-                    //Marcar respuesta Incorrecta
-                    if (question?.correctAnswer != mSelectedOptionPosition) {
-                        answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
-
-                    }else{
-                        mCorrectAnswers++;
-                    }
-                    //Marcar respuesta correcta
-                    question?.correctAnswer?.let {
-                        answerView(it, R.drawable.correct_option_border_bg)
-                    }
-
-                    if (mCurrentPosition == mQuestionsList?.size) {
-                        btnSubmit?.text = "FINISH"
-                    } else {
-                        btnSubmit?.text = "GO TO NEXT QUESTION"
-                    }
-                    mSelectedOptionPosition = 0
-
-
+                    startActivity(intent)
+                    finish()
                 }
             }
+        } else {
+
+            val question = mQuestionsList?.get(mCurrentPosition - 1)
+
+            //Marcar respuesta Incorrecta
+            if (question?.correctAnswer != mSelectedOptionPosition) {
+                answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+
+            } else {
+                mCorrectAnswers++;
+            }
+            //Marcar respuesta correcta
+            question?.correctAnswer?.let {
+                answerView(it, R.drawable.correct_option_border_bg)
+            }
+
+            if (mCurrentPosition == mQuestionsList?.size) {
+                btnSubmit?.text = "FINISH"
+            } else {
+                btnSubmit?.text = "GO TO NEXT QUESTION"
+            }
+            mSelectedOptionPosition = 0
         }
     }
 

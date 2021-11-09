@@ -3,12 +3,12 @@ package eu.tutorials.quizapp
 import com.example.quizapp.Question
 import com.example.quizapp.R
 
-// START
 object Constants {
 
     const val USER_NAME: String = "user_name"
     const val TOTAL_QUESTIONS :String = "total_questions"
     const val CORRECT_ANSWER:String = "correct_answers"
+
     fun getQuestions(): ArrayList<Question> {
         val questionsList = ArrayList<Question>()
 
@@ -114,6 +114,5 @@ object Constants {
 
         return questionsList
     }
-    // END
+
 }
-// END
